@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Booking Upload & Dashboard</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>New Booking</h1>
+      <p>Fill the form and on submit the booking will be saved to the database and all bookings will be shown below.</p>
+    </header>
+
+    <section class="form-section">
+      <form id="bookingForm">
+        <label>Date accepted
+          <input type="date" name="date_accept" id="date_accept" />
+        </label>
+
+        <label>Status
+          <input type="text" name="status" id="status" />
+        </label>
+
+        <label>Transaction ID
+          <input type="text" name="transaction_id" id="transaction_id" />
+        </label>
+
+        <label>Arrived date
+          <input type="date" name="arrived_date" id="arrived_date" />
+        </label>
+
+        <label>Arrived time
+          <input type="time" name="arrived_time" id="arrived_time" />
+        </label>
+
+        <label>Departure date
+          <input type="date" name="departure_date" id="departure_date" />
+        </label>
+
+        <label>Departure time
+          <input type="time" name="departure_time" id="departure_time" />
+        </label>
+
+        <label>RD ID
+          <input type="number" name="rd_id" id="rd_id" />
+        </label>
+
+        <label>Floor No
+          <input type="number" name="floor_no" id="floor_no" />
+        </label>
+
+        <label>Remarks
+          <textarea name="remarks" id="remarks" rows="3"></textarea>
+        </label>
+
+        <label>Room name
+          <input type="text" name="rooms_name" id="rooms_name" />
+        </label>
+
+        <label>Type
+          <input type="text" name="type" id="type" />
+        </label>
+
+        <label>Bed No
+          <input type="text" name="bed_no" id="bed_no" />
+        </label>
+
+        <button type="submit">Upload Booking</button>
+        <div id="formStatus" class="status" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="list-section">
+      <h2>All Bookings</h2>
+      <p id="listStatus" class="status" aria-live="polite"></p>
+      <div id="bookingsListContainer">
+        <table id="bookingsTable" aria-describedby="listStatus">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Accepted</th>
+              <th>Status</th>
+              <th>Transaction</th>
+              <th>Arrived</th>
+              <th>Departure</th>
+              <th>RD ID</th>
+              <th>Floor</th>
+              <th>Room</th>
+              <th>Type</th>
+              <th>Bed</th>
+              <th>Remarks</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="iframe-section">
+      <h2>Dashboard (Tableau embed)</h2>
+      <!--
+        Embedded Tableau Public dashboard.
+        Replaced the placeholder iframe source with the Tableau Public embed URL you provided.
+        Notes:
+        - :embed=yes (or :embed=y) tells Tableau to render an embeddable view.
+        - :showVizHome=no hides the Tableau header/navigation.
+        - :toolbar=no hides the Tableau toolbar.
+        - language param retained from original URL.
+        - allowfullscreen and loading="lazy" are provided for UX.
+        - If you need filtering or other controls, adjust Tableau parameters accordingly.
+      -->
+     <iframe
+      id="tableauViz"
+      src="https://public.tableau.com/views/4_1_17609679341500/Dashboard1?:language=en-US&:embed=yes&:showVizHome=no&:toolbar=no"
+      title="Tableau Dashboard - Dashboard1"
+      width="100%"
+      height="700"
+      frameborder="0"
+      allowfullscreen
+      loading="lazy"
+    ></iframe>
+
+      <p class="note">If the dashboard doesn't render, remove any iframe sandbox attribute in your markup or allow the necessary permissions. For production you can tune embed params (toolbar, tabs, filters) in the Tableau Public share/embed options.</p>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
