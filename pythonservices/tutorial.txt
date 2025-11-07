@@ -1,0 +1,8 @@
+cd pythonservices
+python -m venv venv
+venv\Scripts\activate        
+pip install -r requirements.txt
+
+
+//to run
+python app.py
