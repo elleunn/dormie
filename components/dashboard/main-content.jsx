@@ -6,6 +6,7 @@ import { SalesChart } from "./sales-chart"
 import { BookingsTable } from "./bookings-table"
 import { ConversionOverview } from "./conversion-overview"
 import { useState } from "react"
+import { PythonPlot } from "./python-plot"
 
 export function MainContent({ activeFilter, setActiveFilter }) {
   const [refreshKey, setRefreshKey] = useState(0)
@@ -54,6 +55,10 @@ export function MainContent({ activeFilter, setActiveFilter }) {
             <VisitorsChart />
           </div>
           <ConversionOverview />
+        </div>
+
+        <div className="mb-8">
+          <PythonPlot />
         </div>
 
         {/* Sales Chart */}

@@ -1,0 +1,50 @@
+# ---- Python bytecode / cache ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ---- Virtual environments ----
+venv/
+.env/
+ENV/
+env/
+.venv/
+
+# ---- Build & distribution ----
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+*.spec
+
+# ---- Logs / temporary files ----
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# ---- IDE / Editor settings ----
+.vscode/
+.idea/
+*.iml
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Environment variables ----
+.env
+*.env
+
+# ---- Matplotlib cache ----
+~/.matplotlib
+
+# ---- Jupyter ----
+.ipynb_checkpoints
+
+# ---- Other ----
+__pypackages__/
