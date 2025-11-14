@@ -351,7 +351,6 @@ def get_metrics():
             "change": round(avg_daily_change,1)
         }
     })
-
     
 # ------------------- API ROUTES -------------------
 @app.route('/forecast_linear')
@@ -384,7 +383,6 @@ def background_task():
         time.sleep(3600)  # refresh hourly
 
 if __name__ == '__main__':
-    # Uncomment to enable background auto-refresh
-    # threading.Thread(target=background_task, daemon=True).start()
-    print("🚀 Flask predictive service running at http://localhost:5000")
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    print(f"🚀 Flask predictive service running on 0.0.0.0:{port}")
+    app.run(host="0.0.0.0", port=port)
