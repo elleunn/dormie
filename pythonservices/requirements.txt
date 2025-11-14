@@ -1,10 +1,11 @@
-flask
+Flask
 flask-cors
 pandas
+numpy
 sqlalchemy
 psycopg2-binary
-scikit-learn
 matplotlib
-gunicorn
-python-dotenv
-
+scikit-learn
+pmdarima
+statsmodels
+seaborn
