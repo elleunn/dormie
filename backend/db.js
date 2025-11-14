@@ -30,7 +30,7 @@ async function init() {
       remarks TEXT,
       rooms_name TEXT,
       type TEXT,
-      bed_no TEXT
+      bed_no TEXT,
     );
   `;
   await pool.query(createSql);
@@ -96,7 +96,9 @@ async function addBooking(booking) {
 }
 
 async function getBookings() {
-  const res = await pool.query('SELECT * FROM bookings ORDER BY date_accept DESC');
+  const res = await pool.query(
+    'SELECT * FROM bookings ORDER BY date_accept DESC LIMIT 10'
+  );
   return res.rows;
 }
 
