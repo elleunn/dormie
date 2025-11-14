@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Booking Upload</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main>
+    <h1>New Booking</h1>
+    <form id="bookingForm">
+      <label>Date accepted<input type="date" name="date_accept" id="date_accept" /></label>
+      <label>Status<input type="text" name="status" id="status" /></label>
+      <label>Transaction ID<input type="text" name="transaction_id" id="transaction_id" /></label>
+      <label>Arrived date<input type="date" name="arrived_date" id="arrived_date" /></label>
+      <label>Arrived time<input type="time" name="arrived_time" id="arrived_time" /></label>
+      <label>Departure date<input type="date" name="departure_date" id="departure_date" /></label>
+      <label>Departure time<input type="time" name="departure_time" id="departure_time" /></label>
+      <label>RD ID<input type="number" name="rd_id" id="rd_id" /></label>
+      <label>Floor No<input type="number" name="floor_no" id="floor_no" /></label>
+      <label>Remarks<textarea name="remarks" id="remarks"></textarea></label>
+      <label>Room name<input type="text" name="rooms_name" id="rooms_name" /></label>
+      <label>Type<input type="text" name="type" id="type" /></label>
+      <label>Bed No<input type="text" name="bed_no" id="bed_no" /></label>
+      <button type="submit">Upload Booking</button>
+      <div id="formStatus" class="status"></div>
+    </form>
+
+    <h2>Dashboard (IFRAME)</h2>
+    <iframe id="dashboardFrame" src="/dashboard.html" title="Dashboard" sandbox="allow-same-origin allow-scripts"></iframe>
+  </main>
+
+  <script src="/booking-form.js"></script>
+</body>
+</html>
