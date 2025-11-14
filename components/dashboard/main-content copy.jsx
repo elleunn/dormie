@@ -1,16 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { MetricCard } from "./metric-card"
 import { VisitorsChart } from "./visitors-chart"
 import { SalesChart } from "./sales-chart"
 import { BookingsTable } from "./bookings-table"
 import { ConversionOverview } from "./conversion-overview"
+import { useState } from "react"
 import { PythonPlot } from "./python-plot"
 
 export function MainContent({ activeFilter, setActiveFilter }) {
   const [refreshKey, setRefreshKey] = useState(0)
-  const [metrics, setMetrics] = useState(null) // <-- metrics state
 
   const filterTabs = ["ALL", "REVENUE", "OCCUPANCY"]
 
@@ -20,23 +19,6 @@ export function MainContent({ activeFilter, setActiveFilter }) {
 
   const shouldShowRevenue = activeFilter === "ALL" || activeFilter === "REVENUE"
   const shouldShowOccupancy = activeFilter === "ALL" || activeFilter === "OCCUPANCY"
-
-  // Fetch metrics from API
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/metrics") // <-- Flask endpoint
-        const data = await res.json()
-        setMetrics(data)
-      } catch (err) {
-        console.error("Failed to fetch metrics:", err)
-      }
-    }
-
-    fetchMetrics()
-    const interval = setInterval(fetchMetrics, 60000) // refresh every 60s
-    return () => clearInterval(interval)
-  }, [])
 
   return (
     <main className="flex-1 overflow-auto bg-background">
@@ -65,54 +47,49 @@ export function MainContent({ activeFilter, setActiveFilter }) {
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-6">
-          {/* Show metrics only if loaded */}
-          {metrics ? (
-            <>
-              {(activeFilter === "ALL" || shouldShowRevenue) && (
-                <MetricCard
-                  title="Transaction Count"
-                  value={metrics["Transaction Count"].value}
-                  change={metrics["Transaction Count"].change}
-                  timeframe={metrics["Transaction Count"].timeframe}
-                />
-              )}
-              {shouldShowRevenue && (
-                <MetricCard
-                  title="Total Revenue"
-                  value={metrics["Total Revenue"].value}
-                  change={metrics["Total Revenue"].change}
-                  timeframe={metrics["Total Revenue"].timeframe}
-                />
-              )}
-              {shouldShowOccupancy && (
-                <MetricCard
-                  title="Occupancy Rate"
-                  value={metrics["Occupancy Rate"].value}
-                  change={metrics["Occupancy Rate"].change}
-                  timeframe={metrics["Occupancy Rate"].timeframe}
-                />
-              )}
-              {shouldShowRevenue && (
-                <MetricCard
-                  title="Average Daily Revenue"
-                  value={metrics["Average Daily Revenue"].value}
-                  change={metrics["Average Daily Revenue"].change}
-                  timeframe={metrics["Average Daily Revenue"].timeframe}
-                />
-              )}
-            </>
-          ) : (
-            <p>Loading metrics...</p>
+          {(activeFilter === "ALL" || activeFilter === "REVENUE") && (
+            <MetricCard title="Transaction Count" value="1,247" change={12.5} timeframe="This week" />
+          )}
+          {shouldShowRevenue && (
+            <MetricCard title="Total Revenue" value="₱45,231" change={8.2} timeframe="This month" />
+          )}
+          {shouldShowOccupancy && (
+            <MetricCard title="Occupancy Rate" value="68.5%" change={-2.1} timeframe="This month" />
+          )}
+          {shouldShowRevenue && (
+            <MetricCard title="Average Daily Revenue" value="₱6,461" change={5.8} timeframe="This week" />
           )}
         </div>
 
         {/* Charts */}
-        {(activeFilter === "ALL" || shouldShowOccupancy) && <VisitorsChart />}
-        {shouldShowOccupancy && <ConversionOverview />}
-        {shouldShowRevenue && <PythonPlot />}
-        {shouldShowRevenue && <SalesChart />}
+        {/* VisitorsChart for ALL and OCCUPANCY */}
+        {(activeFilter === "ALL" || activeFilter === "OCCUPANCY") && (
+          <div className="mb-6">
+            <VisitorsChart />
+          </div>
+        )}
 
-        {/* Bookings Table */}
+        {/* ConversionOverview only in OCCUPANCY */}
+        {activeFilter === "OCCUPANCY" && (
+          <div className="mb-6">
+            <ConversionOverview />
+          </div>
+        )}
+
+        {/* PythonPlot and SalesChart only for REVENUE */}
+        {shouldShowRevenue && (
+          <div className="mb-6">
+            <PythonPlot />
+          </div>
+        )}
+
+        {shouldShowRevenue && (
+          <div className="mb-6">
+            <SalesChart />
+          </div>
+        )}
+
+        {/* BookingsTable per filter */}
         {activeFilter === "ALL" && <BookingsTable key={refreshKey} />}
         {activeFilter === "REVENUE" && (
           <div className="mb-6">

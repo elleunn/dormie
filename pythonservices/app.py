@@ -1,12 +1,16 @@
-from flask import Flask, Response
+from flask import Flask, Response, jsonify  # <-- add jsonify for the new API
 from flask_cors import CORS
 import threading
 import time
 import io
 import pandas as pd
 from sqlalchemy import create_engine
+import matplotlib
+matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import timedelta  # <-- for metrics calculations
+import math
 
 # ML imports
 from sklearn.linear_model import LinearRegression
@@ -266,6 +270,89 @@ def generate_cluster_plot():
     latest_cluster_plot = buf
     plt.close()
 
+# ------------------- NEW METRICS API -------------------
+# ------------------- NEW METRICS API (ROLLING DAYS) -------------------
+@app.route('/metrics')
+def get_metrics():
+    df = pd.read_sql("SELECT * FROM transactions", engine)
+    df['date_accept'] = pd.to_datetime(df['date_accept'], errors='coerce')
+    
+    # Ensure unit-nights column exists
+    if 'day_of_stay' not in df.columns:
+        df['day_of_stay'] = 1  # fallback if missing
+
+    latest_date = df['date_accept'].max()
+    
+    # ---------------- Transaction Count (last 7 days) ----------------
+    current_week_start = latest_date - pd.Timedelta(days=6)
+    prev_week_start = current_week_start - pd.Timedelta(days=7)
+    prev_week_end = current_week_start - pd.Timedelta(days=1)
+    
+    tx_count_week = df[df['date_accept'] >= current_week_start].shape[0]
+    tx_count_prev = df[(df['date_accept'] >= prev_week_start) & (df['date_accept'] <= prev_week_end)].shape[0]
+    tx_change = ((tx_count_week - tx_count_prev) / tx_count_prev * 100) if tx_count_prev else 0
+
+    # ---------------- Total Revenue (last 30 days) ----------------
+    current_month_start = latest_date - pd.Timedelta(days=29)
+    prev_month_start = current_month_start - pd.Timedelta(days=30)
+    prev_month_end = current_month_start - pd.Timedelta(days=1)
+
+    rev_month = df[df['date_accept'] >= current_month_start]['gross_amount'].sum()
+    rev_prev = df[(df['date_accept'] >= prev_month_start) & (df['date_accept'] <= prev_month_end)]['gross_amount'].sum()
+    rev_change = ((rev_month - rev_prev)/rev_prev*100) if rev_prev else 0
+
+    # ---------------- Occupancy Rate (last 30 days, using unit-nights) ----------------
+    # Total sellable units
+    df_rooms = pd.read_sql("SELECT * FROM rooms", engine)
+    df_rooms['sellable_units'] = df_rooms['room_capacity'].apply(lambda x: 1 if x == 2 else x)
+    total_sellable_units = df_rooms['sellable_units'].sum()
+    
+    # Available unit-nights = total sellable units * number of days
+    days_current = (latest_date - current_month_start).days + 1
+    days_prev = (current_month_start - prev_month_start).days
+    available_unit_nights_current = total_sellable_units * days_current
+    available_unit_nights_prev = total_sellable_units * days_prev
+
+    # Sold unit-nights = sum of day_of_stay for bookings in period
+    sold_unit_nights_current = df[df['date_accept'] >= current_month_start]['day_of_stay'].sum()
+    sold_unit_nights_prev = df[(df['date_accept'] >= prev_month_start) & (df['date_accept'] <= prev_month_end)]['day_of_stay'].sum()
+
+    occupancy = (sold_unit_nights_current / available_unit_nights_current * 100) if available_unit_nights_current else 0
+    occupancy_prev = (sold_unit_nights_prev / available_unit_nights_prev * 100) if available_unit_nights_prev else 0
+    occupancy_change = occupancy - occupancy_prev
+
+    # ---------------- Average Daily Revenue (last 7 days) ----------------
+    daily_rev_current = df[df['date_accept'] >= current_week_start].groupby(df['date_accept'].dt.date)['gross_amount'].sum()
+    daily_rev_prev = df[(df['date_accept'] >= prev_week_start) & (df['date_accept'] <= prev_week_end)].groupby(df['date_accept'].dt.date)['gross_amount'].sum()
+    
+    avg_daily_rev = daily_rev_current.mean() if not daily_rev_current.empty else 0
+    avg_daily_rev_prev = daily_rev_prev.mean() if not daily_rev_prev.empty else 0
+    avg_daily_change = ((avg_daily_rev - avg_daily_rev_prev)/avg_daily_rev_prev*100) if avg_daily_rev_prev else 0
+
+    return jsonify({
+        "Transaction Count": {
+            "value": tx_count_week,
+            "timeframe": "Last 7 days",
+            "change": round(tx_change,1)
+        },
+        "Total Revenue": {
+            "value": f"₱{round(rev_month,0):,.0f}",
+            "timeframe": "Last 30 days",
+            "change": round(rev_change,1)
+        },
+        "Occupancy Rate": {
+            "value": f"{round(occupancy,1)}%",
+            "timeframe": "Last 30 days",
+            "change": round(occupancy_change,1)
+        },
+        "Average Daily Revenue": {
+            "value": f"₱{round(avg_daily_rev,0):,.0f}",
+            "timeframe": "Last 7 days",
+            "change": round(avg_daily_change,1)
+        }
+    })
+
+    
 # ------------------- API ROUTES -------------------
 @app.route('/forecast_linear')
 def forecast_linear():
