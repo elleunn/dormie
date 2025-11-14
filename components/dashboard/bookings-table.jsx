@@ -13,20 +13,20 @@ export function BookingsTable() {
     fetchBookings()
   }, [])
 
-  const fetchBookings = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch("https://dormie-backend.onrender.com/api/bookings")
-      if (!res.ok) throw new Error("Failed to fetch bookings")
-      const data = await res.json()
-      setBookings(data.bookings || [])
-    } catch (err) {
-      console.error("Error fetching bookings:", err)
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+const fetchBookings = async () => {
+  try {
+    setLoading(true)
+    const res = await fetch("https://dormie-backend.onrender.com/api/bookings")
+    if (!res.ok) throw new Error("Failed to fetch bookings")
+    const data = await res.json()
+    setBookings(data || [])
+  } catch (err) {
+    console.error("Error fetching bookings:", err)
+    setError(err.message)
+  } finally {
+    setLoading(false)
   }
+}
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "-"
