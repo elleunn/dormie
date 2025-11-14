@@ -36,14 +36,11 @@ export function UploadTab() {
     setMessage("")
 
     try {
-      const response = await fetch("/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-
+const response = await fetch("https://dormie-backend.onrender.com/api/bookings", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(formData),
+})
       if (!response.ok) {
         const data = await response.json()
         throw new Error(data.error || "Failed to create booking")
