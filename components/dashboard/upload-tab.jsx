@@ -219,7 +219,7 @@ export function UploadTab() {
                     value={formData.type}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="e.g., Single/Double"
+                    placeholder="e.g., Couple/Bedspace"
                   />
                 </div>
               </div>
