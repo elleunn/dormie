@@ -383,6 +383,7 @@ def background_task():
         time.sleep(3600)  # refresh hourly
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    print(f"🚀 Flask predictive service running on 0.0.0.0:{port}")
-    app.run(host="0.0.0.0", port=port)
+    # Use Render's recommended port (e.g., 10000) or fallback to 5000 locally
+    PORT = 10000
+    print(f"🚀 Flask predictive service running on 0.0.0.0:{PORT}")
+    app.run(host="0.0.0.0", port=PORT)
