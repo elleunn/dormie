@@ -30,7 +30,7 @@ async function init() {
       remarks TEXT,
       rooms_name TEXT,
       type TEXT,
-      bed_no TEXT,
+      bed_no TEXT
     );
   `;
   await pool.query(createSql);
