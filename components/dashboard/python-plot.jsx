@@ -24,7 +24,7 @@ export function PythonPlot() {
         setError(null)
         setPlotData(null)
 
-        const response = await fetch(`http://127.0.0.1:5000/${selectedEndpoint}`)
+        const response = await fetch(`https://dormie-acuc.onrender.com/${selectedEndpoint}`)
         if (!response.ok) {
           throw new Error(`Failed to fetch plot: ${response.status}`)
         }

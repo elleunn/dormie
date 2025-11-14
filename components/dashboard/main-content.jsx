@@ -25,7 +25,7 @@ export function MainContent({ activeFilter, setActiveFilter }) {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const res = await fetch("http://localhost:5000/metrics") // <-- Flask endpoint
+        const res = await fetch("https://dormie-acuc.onrender.com/metrics") // <-- Flask endpoint
         const data = await res.json()
         setMetrics(data)
       } catch (err) {
