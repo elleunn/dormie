@@ -34,8 +34,7 @@ export function MainContent({ activeFilter, setActiveFilter }) {
     }
 
     fetchMetrics()
-    const interval = setInterval(fetchMetrics, 60000) // refresh every 60s
-    return () => clearInterval(interval)
+    
   }, [])
 
   return (
